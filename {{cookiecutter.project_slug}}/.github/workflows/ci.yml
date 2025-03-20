@@ -68,6 +68,9 @@ jobs:
         uses: actions/checkout@v6
       {%- if cookiecutter.use_docker == 'y' %}
 
+      - name: Dummy .env file
+        run: touch .env
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -77,34 +80,46 @@ jobs:
           push: false
           load: true
           files: docker-compose.local.yml
-          targets: django
+          targets: django-ci
           set: |
             django.cache-from=type=gha,scope=django-cached-tests
             django.cache-to=type=gha,scope=django-cached-tests,mode=max
             postgres.cache-from=type=gha,scope=postgres-cached-tests
             postgres.cache-to=type=gha,scope=postgres-cached-tests,mode=max
 
-      - name: Build and cache docs
-        uses: docker/bake-action@v6
-        with:
-          push: false
-          load: true
-          files: docker-compose.docs.yml
-          set: |
-            docs.cache-from=type=gha,scope=cached-docs
-            docs.cache-to=type=gha,scope=cached-docs,mode=max
-
       - name: Check DB Migrations
-        run: docker compose -f docker-compose.local.yml run --rm django python manage.py makemigrations --check
+        run: docker compose -f docker-compose.local.yml run --rm django-ci python manage.py makemigrations --check
 
       - name: Run DB Migrations
-        run: docker compose -f docker-compose.local.yml run --rm django python manage.py migrate
+        run: docker compose -f docker-compose.local.yml run --rm django-ci python manage.py migrate
+
+      - name: Compile Translations
+        run: docker compose -f docker-compose.local.yml run --rm django-ci python manage.py compilemessages -i=.venv/*
 
       - name: Run Django Tests
-        run: docker compose -f docker-compose.local.yml run django pytest
+        run: docker compose -f docker-compose.local.yml run django-ci pytest
 
       - name: Tear down the Stack
         run: docker compose -f docker-compose.local.yml down
+
+# NOTE: Disabled the docs job for now, as it not used by anyone and it wastes resources
+#  docs:
+#    runs-on: ubuntu-latest
+#
+#    steps:
+#      - name: Checkout Code Repository
+#        uses: actions/checkout@v4
+#
+#      - name: Build and cache docs
+#        uses: docker/bake-action@v6
+#        with:
+#          push: false
+#          load: true
+#          files: docker-compose.docs.yml
+#          set: |
+#            docs.cache-from=type=gha,scope=cached-docs
+#            docs.cache-to=type=gha,scope=cached-docs,mode=max
+
       {%- else %}
 
       - name: Install uv
