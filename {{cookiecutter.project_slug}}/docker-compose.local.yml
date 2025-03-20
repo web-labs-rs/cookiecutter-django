@@ -14,6 +14,9 @@ services:
       - postgres
       {%- if cookiecutter.use_celery == 'y' %}
       - redis
+      - celeryworker
+      - celerybeat
+      - flower
       {%- endif %}
       {%- if cookiecutter.use_mailpit == 'y' %}
       - mailpit
@@ -24,9 +27,24 @@ services:
     env_file:
       - ./.envs/.local/.django
       - ./.envs/.local/.postgres
+      - path: ./.env  # Use this .env file to override the values .envs/.local/.django
+      - required: false
     ports:
       - '8000:8000'
     command: /start
+
+  interpreter:
+    <<: *django
+    profiles:
+      - interpreter
+    container_name: {{cookiecutter.project_slug}}_local_interpreter
+    depends_on:
+      - postgres
+      {%- if cookiecutter.use_celery == 'y' %}
+      - redis
+      - celeryworker
+      {%- endif %}
+    ports: []
 
   postgres:
     build:
@@ -39,6 +57,8 @@ services:
       - {{ cookiecutter.project_slug }}_local_postgres_data_backups:/backups
     env_file:
       - ./.envs/.local/.postgres
+    ports:
+      - "5432:5432"
 
   {%- if cookiecutter.use_mailpit == 'y' %}
 
@@ -47,6 +67,7 @@ services:
     container_name: {{ cookiecutter.project_slug }}_local_mailpit
     ports:
       - "8025:8025"
+      - "1025:1025"
 
   {%- endif %}
   {%- if cookiecutter.use_celery == 'y' %}
@@ -87,6 +108,12 @@ services:
     <<: *django
     image: {{ cookiecutter.project_slug }}_local_flower
     container_name: {{ cookiecutter.project_slug }}_local_flower
+    depends_on:
+      - redis
+      - postgres
+      {%- if cookiecutter.use_mailpit == 'y' %}
+      - mailpit
+      {%- endif %}
     ports:
       - '5555:5555'
     command: /start-flower
