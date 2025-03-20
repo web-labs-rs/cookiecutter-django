@@ -1,7 +1,7 @@
 # ==== pytest ====
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "--ds=config.settings.test --reuse-db --import-mode=importlib"
+addopts = "--ds=config.settings.test --reuse-db"  # NOTE: --import-mode=importlib removed because of missing diff
 python_files = [
     "tests.py",
     "test_*.py",
@@ -123,12 +123,11 @@ select = [
     "RUF",
 ]
 ignore = [
-    "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
-    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
-    "SIM102", # sometimes it's better to nest
-    # of types for comparison.
-    # Deactivated because it can make the code slow:
-    # https://github.com/astral-sh/ruff/issues/7871
+  "S101", # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
+  "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+  "SIM102", # sometimes it's better to nest
+  "SLF001", # Private member accessed
+  "TRY301", # raise-within-try
 ]
 
 [tool.ruff.lint.isort]
