@@ -1,0 +1,24 @@
+name: Merge PR
+
+on:
+  push:
+    branches: ["master", "main"]
+
+concurrency:
+  group: merge_pr
+  cancel-in-progress: false
+
+jobs:
+  bumper:
+    name: "Bump version number"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # fetch-tags: true  # NOTE: Does not work [https://github.com/actions/checkout/issues/1471]
+          fetch-depth: 0
+
+      - name: "Bump version number"
+        uses: web-labs-rs/actions/bump-version@v1
+        with:
+          filename: "{{cookiecutter.project_slug}}/__init__.py"
