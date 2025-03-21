@@ -36,3 +36,11 @@ logs *args:
 # manage: Executes `manage.py` command.
 manage +args:
     @docker compose run --rm django python ./manage.py {{ "{{args}}" }}
+
+# translate: Generate or update translation files.
+translate:
+    @docker compose run --rm django python ./manage.py makemessages --all --no-location -i=.venv/*
+
+# translate-compile: Compile translation files.
+translate-compile:
+    @docker compose run --rm django python ./manage.py compilemessages -i=.venv/*
