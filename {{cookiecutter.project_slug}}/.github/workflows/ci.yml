@@ -94,7 +94,7 @@ jobs:
         run: docker compose -f docker-compose.local.yml run --rm django python manage.py migrate
 
       - name: Compile Translations
-        run: docker compose -f docker-compose.local.yml run --rm django python manage.py compilemessages
+        run: docker compose -f docker-compose.local.yml run --rm django python manage.py compilemessages -i=.venv/*
 
       - name: Run Django Tests
         run: docker compose -f docker-compose.local.yml run django pytest
