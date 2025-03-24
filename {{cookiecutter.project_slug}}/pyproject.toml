@@ -61,6 +61,7 @@ indent_size = 2
 [tool.ruff]
 # Exclude a variety of commonly ignored directories.
 extend-exclude = [
+    ".scripts/*",
     "*/migrations/*.py",
     "staticfiles/*",
 ]
