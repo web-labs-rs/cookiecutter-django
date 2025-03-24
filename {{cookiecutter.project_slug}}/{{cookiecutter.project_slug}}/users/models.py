@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .managers import UserManager
 {%- endif %}
+from django.db import models
 
 
 class User(AbstractUser):
@@ -29,6 +30,8 @@ class User(AbstractUser):
     {%- if cookiecutter.username_type == "email" %}
     email = EmailField(_("email address"), unique=True)
     username = None  # type: ignore[assignment]
+
+    delete_request_date = models.DateTimeField(_("delete request date"), null=True, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
