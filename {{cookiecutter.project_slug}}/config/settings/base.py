@@ -217,6 +217,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "{{cookiecutter.project_slug}}.users.context_processors.allauth_settings",
+                "{{cookiecutter.project_slug}}.utils.context_processors.export_vars",
             ],
         },
     },
