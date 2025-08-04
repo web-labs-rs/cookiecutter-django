@@ -1,6 +1,8 @@
 from .base import *  # noqa: F403
 from .base import INSTALLED_APPS
 from .base import MIDDLEWARE
+from .base import REST_FRAMEWORK
+from .base import SPECTACULAR_SETTINGS
 {%- if cookiecutter.frontend_pipeline == 'Webpack' %}
 from .base import WEBPACK_LOADER
 {%- endif %}
@@ -112,6 +114,15 @@ CELERY_TASK_ALWAYS_EAGER = True
 {%- endif %}
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#task-eager-propagates
 CELERY_TASK_EAGER_PROPAGATES = True
+
+{%- endif %}
+{% if cookiecutter.use_drf == "y" -%}
+# Spectacular
+# -------------------------------------------------------------------------------
+INSTALLED_APPS += ["drf_spectacular"]
+REST_FRAMEWORK["DEFAULT_AUTHENTICATION_CLASSES"] += ("rest_framework.authentication.SessionAuthentication",)
+REST_FRAMEWORK["DEFAULT_SCHEMA_CLASS"] = "drf_spectacular.openapi.AutoSchema"
+SPECTACULAR_SETTINGS["SERVE_PERMISSIONS"] = []  # Disable permissions for devs
 
 {%- endif %}
 {%- if cookiecutter.frontend_pipeline == 'Webpack' %}
