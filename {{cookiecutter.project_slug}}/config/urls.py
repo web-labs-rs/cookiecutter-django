@@ -9,8 +9,6 @@ from django.urls import path
 from django.views import defaults as default_views
 from django.views.generic import TemplateView
 {%- if cookiecutter.use_drf == 'y' %}
-from drf_spectacular.views import SpectacularAPIView
-from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 {%- endif %}
 
@@ -50,8 +48,6 @@ if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
     # these url in browser to see how these error pages look like.
     urlpatterns += [
-        path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
-        path("api/docs/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"),
         path(
             "400/",
             default_views.bad_request,
@@ -69,6 +65,16 @@ if settings.DEBUG:
         ),
         path("500/", default_views.server_error),
     ]
+    {%- if cookiecutter.use_drf == 'y' %}
+    if "drf_spectacular" in settings.INSTALLED_APPS:
+        from drf_spectacular.views import SpectacularAPIView
+        from drf_spectacular.views import SpectacularSwaggerView
+
+        urlpatterns += [
+            path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
+            path("api/docs/", SpectacularSwaggerView.as_view(url_name="api-schema"), name="api-docs"),
+        ]
+    {%- endif %}
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 
