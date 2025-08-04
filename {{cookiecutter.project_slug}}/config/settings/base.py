@@ -10,6 +10,8 @@ from pathlib import Path
 import environ
 from django.utils.translation import gettext_lazy as _
 
+from {{ cookiecutter.project_slug }} import PROJECT_VERSION
+
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # {{ cookiecutter.project_slug }}/
 APPS_DIR = BASE_DIR / "{{ cookiecutter.project_slug }}"
@@ -95,7 +97,6 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    "drf_spectacular",
     "dj_rest_auth",
     "dj_rest_auth.registration",
     "rest_framework_simplejwt",
@@ -374,11 +375,10 @@ STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        # "rest_framework.authentication.SessionAuthentication",
+        # "rest_framework.authentication.TokenAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 REST_AUTH = {
@@ -398,7 +398,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 SPECTACULAR_SETTINGS = {
     "TITLE": "{{ cookiecutter.project_name }} API",
     "DESCRIPTION": "Documentation of API endpoints of {{ cookiecutter.project_name }}",
-    "VERSION": "1.0.0",
+    "VERSION": PROJECT_VERSION,
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     "SCHEMA_PATH_PREFIX": "/api/",
 }
