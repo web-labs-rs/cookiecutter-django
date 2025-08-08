@@ -1,0 +1,162 @@
+{% raw %}{% extends 'admin/base.html' %}
+
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    footer {
+      padding: 1em;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    /* Buttons */
+    .field-get_actions {
+      width: 1%;
+      white-space: nowrap;
+    }
+
+    .field-get_actions>p {
+      padding-right: 0;
+    }
+
+    .button.button-accent {
+      background-color: #7d6446;
+    }
+
+    .button.action-button {
+      padding: 4px 1em;
+    }
+
+    .button[disabled],
+    input[type=submit][disabled],
+    input[type=button][disabled] {
+      cursor: not-allowed;
+    }
+
+    /* Periods */
+    .field-period>.date {
+      display: inline-block;
+    }
+
+    /* No header for inline */
+    fieldset.no-header td.original>p {
+      display: none;
+    }
+
+    .inline-group .tabular fieldset.no-header tr.has_original td {
+      padding-top: 5px;
+    }
+
+    /* Badge colors */
+    .badge {
+      display: inline-block;
+      padding: .25em .4em;
+      border-radius: 3px;
+      font-size: 90%;
+      font-weight: 500;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .badge:not([title=""]):after {
+      content: "🔎";
+      padding-left: 5px;
+    }
+
+    .badge-success {
+      background-color: var(--message-success-bg);
+    }
+
+    .badge-warning {
+      background-color: var(--message-warning-bg);
+    }
+
+    .badge-error {
+      background-color: var(--error-fg);
+      color: var(--button-fg);
+    }
+
+    .badge-threshold {
+      margin-right: 1em;
+      background-color: #6b6b6b;
+      color: var(--button-fg);
+    }
+
+    .badge.badge-threshold:after {
+      content: "";
+      padding-left: 0;
+    }
+
+    /* Whisper text */
+    .whisper {
+      display: block;
+      color: var(--object-tools-hover-bg);
+      user-select: none;
+    }
+
+    /* Main nav */
+    .dashboard #content-main .app-contests .model-prize,
+    #nav-sidebar .app-contests .model-prize {
+      display: none;
+    }
+
+    /* Receipts page */
+    .app-receipts.model-receipt.change-form textarea#id_journal {
+      height: 300px;
+      font-family: monospace;
+    }
+
+    .app-receipts.model-receipt.change-form .column-points {
+      width: 1%;
+    }
+
+    .app-receipts.model-receipt.change-form .field-journal .readonly {
+      font-family: monospace;
+      white-space: pre;
+    }
+
+    /* Environment ribbon */
+    header:after {
+      content: "";
+      display: none;
+      position: fixed;
+      top: 100px;
+      left: -30px;
+      padding: 5px 15px;
+      min-width: 150px;
+      opacity: .7;
+      pointer-events: none;
+      text-align: center;
+      user-select: none;
+      z-index: 1000;
+      background-color: #f00;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-size: 14px;
+      font-weight: bold;
+      transform: rotate(-45deg);
+      transform-origin: top left;
+    }
+
+    .env-local header:after {
+      display: block;
+      content: "development";
+    }
+
+    .env-staging header:after {
+      display: block;
+      content: "staging";
+      background-color: #ffc107;
+      color: #000;
+    }
+  </style>
+{% endblock extrastyle %}
+{% block bodyclass %}
+  {{ block.super }} env-{{ ENV }}
+{% endblock bodyclass %}
+{% block footer %}
+  v{{ PROJECT_VERSION }}
+{% endblock footer %}
+{% endraw %}
