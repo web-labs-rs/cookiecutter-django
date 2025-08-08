@@ -11,7 +11,7 @@ from {{ cookiecutter.project_slug }}.users.models import User
 from .serializers import UserSerializer
 
 
-class UserViewSet(RetrieveModelMixin, ListModelMixin, UpdateModelMixin, GenericViewSet):
+class UserViewSet(UpdateModelMixin, GenericViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
     {%- if cookiecutter.username_type == "email" %}
