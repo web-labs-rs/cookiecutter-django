@@ -50,7 +50,7 @@ updates:
   # Enable version updates for Docker Compose files
   - package-ecosystem: "docker-compose"
     directories:
-      - "{{cookiecutter.project_slug}}/"
+      - "/"
     schedule:
       interval: "daily"
     labels:
