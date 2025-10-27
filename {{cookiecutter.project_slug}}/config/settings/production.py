@@ -13,6 +13,8 @@ from sentry_sdk.integrations.logging import LoggingIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
 
 {% endif -%}
+from {{ cookiecutter.project_slug }} import PROJECT_VERSION
+
 from .base import *  # noqa: F403
 from .base import DATABASES
 from .base import INSTALLED_APPS
@@ -427,6 +429,7 @@ sentry_sdk.init(
     integrations=integrations,
     environment=env("SENTRY_ENVIRONMENT", default="production"),
     traces_sample_rate=env.float("SENTRY_TRACES_SAMPLE_RATE", default=0.0),
+    release=PROJECT_VERSION,
 )
 {% endif %}
 {% if cookiecutter.use_drf == "y" -%}
@@ -439,5 +442,6 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 ]
 
 {%- endif %}
+
 # Your stuff...
 # ------------------------------------------------------------------------------
